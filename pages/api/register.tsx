@@ -28,7 +28,6 @@ const sendWelcomeEmail = (toEmail: string, firstName: string) => {
   });
 };
 
-
 const handleRegister = async (req: Request, res: Response) => {
   if (req.method === "POST") {
     const data = req.body;
@@ -51,9 +50,10 @@ const handleRegister = async (req: Request, res: Response) => {
         return res.status(400).json({ message: "Error desconocido" });
       }
     }
+  } else {
+    return res.status(400).json({ message: "Bad request" });
   }
+}
 
-  return res.status(400).json({ message: "Bad request" });
-};
 
 export default handleRegister;
