@@ -9,19 +9,28 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "encoding": "^0.1.13",
+    "express": "^4.18.2",
+    "firebase": "^10.2.0",
+    "next": "13.5.5",
+    "nodemailer": "^6.9.6",
     "react": "^18",
     "react-dom": "^18",
-    "next": "13.5.5"
+    "react-icons": "^4.11.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@types/express": "^4.17.20",
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.13",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10",
+    "dotenv": "^16.3.1",
+    "eslint": "^8",
+    "eslint-config-next": "13.5.5",
     "postcss": "^8",
     "tailwindcss": "^3",
-    "eslint": "^8",
-    "eslint-config-next": "13.5.5"
+    "typescript": "^5"
   }
 }
