@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { transporter, mailOptions } from "../../config/nodemailer";
+import { createTransporter, sendEmail, mailOptions } from "../../config/nodemailer";
 
 // Objeto que mapea los campos del formulario
 const CONTACT_MESSAGE_FIELDS: { [key: string]: string } = {
@@ -8,7 +8,7 @@ const CONTACT_MESSAGE_FIELDS: { [key: string]: string } = {
 };
 
 // Función para enviar un correo de bienvenida
-const sendWelcomeEmail = (toEmail: string, firstName: string) => {
+const sendWelcomeEmail = async (toEmail: string, firstName: string) => {
   console.log("Sending welcome email to:", toEmail);
   console.log("User's first name:", firstName);
 
@@ -19,13 +19,13 @@ const sendWelcomeEmail = (toEmail: string, firstName: string) => {
     text: `Hola ${firstName},\n\nBienvenido a nuestra aplicación. Gracias por unirte.`,
   };
 
-  transporter.sendMail(welcomeMailOptions, (error, info) => {
-    if (error) {
-      console.error("Error al enviar el correo de bienvenida:", error);
-    } else {
-      console.log("Correo de bienvenida enviado:", info.response);
-    }
-  });
+  try {
+    await sendEmail(welcomeMailOptions);
+    console.log("Email sent successfully.");
+  } catch (error) {
+    console.error("Error al enviar el correo de bienvenida:", error);
+    throw error; // Re-lanzar el error para que sea manejado en el controlador principal
+  }
 };
 
 const handleRegister = async (req: Request, res: Response) => {
@@ -39,7 +39,6 @@ const handleRegister = async (req: Request, res: Response) => {
 
     try {
       await sendWelcomeEmail(data.toEmail, data.firstName);
-      console.log("Email sent successfully.");
       res.status(200).json({ success: true });
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -53,7 +52,6 @@ const handleRegister = async (req: Request, res: Response) => {
   } else {
     return res.status(400).json({ message: "Bad request" });
   }
-}
-
+};
 
 export default handleRegister;
