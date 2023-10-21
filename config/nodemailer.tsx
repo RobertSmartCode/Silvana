@@ -6,15 +6,13 @@ const clientId = process.env.OAUTH2_CLIENT_ID;
 const clientSecret = process.env.OAUTH2_CLIENT_SECRET;
 
 export const transporter = nodemailer.createTransport({
-
-  host:"https://silvana-iota.vercel.app/",
-  secure:true,
-  service: "Gmail",
+  service: 'Gmail', // Cambia esto al servicio de correo que estés utilizando
   auth: {
+    type: "OAuth2",
     user: email,
-    pass: pass,
     clientId: clientId,
     clientSecret: clientSecret,
+    
   },
 });
 
