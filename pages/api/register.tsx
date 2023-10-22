@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createTransporter, sendEmail, mailOptions } from "../../config/nodemailer";
+import { sendEmail, mailOptions } from "../../config/nodemailer";
 
 // Objeto que mapea los campos del formulario
 const CONTACT_MESSAGE_FIELDS: { [key: string]: string } = {
