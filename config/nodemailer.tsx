@@ -27,16 +27,16 @@ const getAccessToken = async (credentials: OAuth2Credentials): Promise<string> =
   const oauth2Client = new google.auth.OAuth2({
     clientId: credentials.clientId,
     clientSecret: credentials.clientSecret,
-    redirectUri: "https://developers.google.com/oauthplayground", // Cambia la URL de redirección según tu configuración
+    redirectUri: "https://developers.google.com/oauthplayground",
   });
 
   oauth2Client.setCredentials({
     refresh_token: credentials.refreshToken,
   });
 
-  const { token } = await oauth2Client.getAccessToken()!;
+  let { token } = await oauth2Client.getAccessToken()!;
   return token as string;
-}; // Agrega un corchete de cierre aquí
+}; 
 
 export const createTransporter = async (credentials: OAuth2Credentials): Promise<Transporter> => {
   const accessToken = await getAccessToken(credentials);
@@ -72,3 +72,5 @@ export const mailOptions = {
   from: email,
   to: email,
 };
+
+
