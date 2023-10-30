@@ -8,7 +8,7 @@ import React from 'react';
 import { useFormik } from 'formik';
 import { getAuth, GoogleAuthProvider, signInWithPopup, updateProfile } from 'firebase/auth';
 import Video from './Video';
-import WhatsAppLink from './WhatsAppLink';
+
 import * as Yup from 'yup';
 
 const validationSchema = Yup.object({
@@ -78,7 +78,7 @@ const Register = () => {
           Registrarme
         </button>
       </form>
-      <WhatsAppLink />
+      
     </div>
   );
 };
