@@ -15,7 +15,7 @@ const WhatsAppLink: React.FC = () => {
     style={{
       backgroundColor: '#25d366',
       color: 'white',
-      padding: '10px 15px',
+      padding: '10px 10px',
       borderRadius: '50px',
       textDecoration: 'none',
       position: 'fixed',

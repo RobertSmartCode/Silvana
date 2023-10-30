@@ -1,73 +1,86 @@
 "use client"
 
-import {app} from '../../firebaseConfig';
+import { useRouter } from "next/navigation";
 
-import { sendWelcomeMessage } from "../../lib/api";
-
-import React, { useState } from "react";
-import { getAuth, GoogleAuthProvider, signInWithPopup, updateProfile } from "firebase/auth";
-import Video from "./Video";
+import { app } from '../../firebaseConfig';
+import { sendWelcomeMessage } from '../../lib/api';
+import React from 'react';
+import { useFormik } from 'formik';
+import { getAuth, GoogleAuthProvider, signInWithPopup, updateProfile } from 'firebase/auth';
+import Video from './Video';
 import WhatsAppLink from './WhatsAppLink';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object({
+  name: Yup.string().required('El nombre es requerido'),
+});
 
 const Register = () => {
-  const [name, setName] = useState("");
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  const router = useRouter(); // Inicializa el router
 
-  const handleGoogleSignIn = async () => {
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      try {
+        const userCredential = await signInWithPopup(auth, provider);
+        const user = userCredential.user;
 
-    try {
-      const userCredential = await signInWithPopup(auth, provider);
-      const user = userCredential.user;
+        await updateProfile(user, {
+          displayName: values.name || user.displayName,
+        });
 
-      await updateProfile(user, {
-        displayName: name || user.displayName,
-      });
+        const firstName = user.displayName;
+        const photoURL = user.photoURL;
 
-      const firstName = user.displayName;
-      const photoURL = user.photoURL;
+        if (user.email) {
+          sendWelcomeMessage(user.email, values.name);
+        }
 
-        
-      if (user.email) {
-        // Envía el correo de bienvenida solo si `user.email` no es nulo
-        sendWelcomeMessage(user.email, name);
+        console.log('Usuario registrado con Google:', user);
+        console.log('Primer nombre:', firstName);
+        console.log('URL de la imagen de perfil:', photoURL);
+        router.push('/thankyou');
+      } catch (error) {
+        console.error('Error al registrar usuario con Google:', error);
       }
-      
-
-
-      console.log("Usuario registrado con Google:", user);
-      console.log("Primer nombre:", firstName);
-      console.log("URL de la imagen de perfil:", photoURL);
-    } catch (error) {
-      console.error("Error al registrar usuario con Google:", error);
-    }
-  };
+    },
+  });
 
   return (
     <div className="w-full min-h-screen flex justify-center items-center flex-col bg-indigo-100">
-    <Video />
+      <Video />
 
-    <div className="w-1/2 mb-4 flex flex-col items-center">
-      <input
-        type="text"
-        placeholder="Ingrese Nombre"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="w-full p-4 mb-4 bg-rose-400 text-white border-none outline-none rounded-full text-center placeholder-gray-500"
-      />
-      <button
-        onClick={handleGoogleSignIn}
-        className="w-full bg-rose-400 text-white p-4 border-none cursor-pointer rounded-full"
+      <form
+        className="w-1/2 mb-4 flex flex-col items-center"
+        onSubmit={formik.handleSubmit}
       >
-        Registrarme
-      </button>
+        <input
+          type="text"
+          placeholder="Ingrese Nombre"
+          name="name"
+          value={formik.values.name}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          className="w-full lg:w-3/4 sm:w-1/4 p-4 mb-4 bg-rose-400 text-white border-none outline-none rounded-full text-center placeholder-gray-500"
+        /> 
+        {formik.touched.name && formik.errors.name ? (
+          <div className="text-red-600">{formik.errors.name}</div>
+        ) : null}
+        <button
+          type="submit"
+          className="w-full lg:w-3/4 sm:w-1/4 bg-rose-400 text-white p-4 border-none cursor-pointer rounded-full"
+        >
+          Registrarme
+        </button>
+      </form>
+      <WhatsAppLink />
     </div>
-    <WhatsAppLink/>
-  </div>
-  
-  
   );
 };
 
 export default Register;
-

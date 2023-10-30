@@ -15,8 +15,8 @@ const sendWelcomeEmail = async (toEmail: string, firstName: string) => {
   const welcomeMailOptions = {
     from: mailOptions.from,
     to: toEmail,
-    subject: "Bienvenido a nuestra aplicación",
-    text: `Hola ${firstName},\n\nBienvenido a nuestra aplicación. Gracias por unirte.`,
+    subject: "Gracias y bienvenid@",
+    text: `Hola ${firstName},\n\nAquí un fragmento del libro.\n\n https://drive.google.com/file/d/1B0RkFdF0Kxvj1tBO46yVD1XrpCF-Hw0T/view`,
   };
 
   try {
