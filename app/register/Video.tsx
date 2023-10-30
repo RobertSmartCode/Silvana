@@ -5,7 +5,7 @@ const Video = () => {
 
   return (
     <div className="m-5 p-2 flex justify-center items-center">
-      <video className="w-full h-auto lg:w-3/4 sm:w-full sm:w-1/4" controls preload="auto" loop >
+      <video className="w-full h-auto lg:w-3/4 sm:w-full sm:w-1/4" controls preload="auto" loop autoPlay >
         <source src={videoUrl} type="video/mp4" />
         Tu navegador no soporta la reproducción de videos.
       </video>
